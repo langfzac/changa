@@ -17,7 +17,7 @@ extern "C" {
 /* Constants */
 #define CL_Rgascode         8.2494e7
 #define CL_Eerg_gm_degK     CL_Rgascode
-#define CL_Eerg_gm_degK3_2  1.5*CL_Eerg_gm_degK
+#define CL_Eerg_gm_degK3_2  2.5*CL_Eerg_gm_degK
 #define CL_NMAXBYTETABLE   56000
 
 typedef struct CoolingParametersStruct {
