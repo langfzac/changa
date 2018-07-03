@@ -809,6 +809,7 @@ void TreePiece::updateuDot(int activeRung,
 	    else {
 		p->uDot() = ExternalHeating;
 		}
+	CkPrintf("p->uDot() %d/n");
 	    }
 	}
 #endif
