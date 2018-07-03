@@ -266,7 +266,8 @@ double CoolCodeEnergyToTemperature( COOL *Cool, COOLPARTICLE *cp, double E,
  */
 void CoolIntegrateEnergyCode(COOL *cl, clDerivsData *clData, COOLPARTICLE *cp,
                              double *ECode, double PdVCode, double rhoCode,
-                             double ZMetal, double *posCode, double tStep )
+                             double ZMetal, double *posCode, double tStep,
+                             double h, double cs)
 {
     double radius = 0;
     double omega, tcool, PdV, T, dECGS;
@@ -283,10 +284,10 @@ void CoolIntegrateEnergyCode(COOL *cl, clDerivsData *clData, COOLPARTICLE *cp,
     radius = sqrt(radius);
     /* Calculate approximate keplerian angular velocity */
     omega = sqrt(cl->dStarCenterOfMass[3] / pow(radius,3));
-    /* Calculate cooling time (in seconds)*/
-    tcool = cl->dSecUnit * cl->beta/omega;
     /* Convert the particle's internal energy to CGS */
     dECGS = CoolCodeEnergyToErgPerGm( cl, *ECode );
+    /* Calculate cooling time (in seconds)*/
+    tcool = cl->dSecUnit * ((cl->beta)*dECGS)/(cs * h * pow(omega,2));
     /* Convert PdV work to CGS */
     PdV = CoolCodeWorkToErgPerGmPerSec(cl, PdVCode);
     /* Integrate energy */

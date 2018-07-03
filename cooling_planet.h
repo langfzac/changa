@@ -210,5 +210,3 @@ void CoolTableRead( COOL *Cool, int nData, void *vData);
 #endif
 
 #endif
-
-

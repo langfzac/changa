@@ -24,7 +24,7 @@
 /// Initial calculation of densities and internal energies, and cooling rates.
 ///
 void
-Main::initSph() 
+Main::initSph()
 {
     if(param.bDoGas) {
 	ckout << "Calculating densities/divv ...";
@@ -79,18 +79,18 @@ void Main::initCooling()
     dMProxy.initCooling(param.dGmPerCcUnit, param.dComovingGmPerCcUnit,
 		    param.dErgPerGmUnit, param.dSecUnit, param.dKpcUnit,
 		    param.CoolParam, CkCallbackResumeThread());
-    
+
     /* Read in tables from files as necessary */
     int cntTable = 0;
     int nTableRows;
     int nTableColumns;
     char TableFileSuffix[20];
-    
+
     for (;;) {
 	CoolTableReadInfo(&param.CoolParam, cntTable, &nTableColumns,
 			  TableFileSuffix);
 	if (!nTableColumns) break;
-    
+
 	cntTable++;
 	nTableRows = ReadASCII(TableFileSuffix, nTableColumns, NULL);
 	if (nTableRows) {
@@ -98,7 +98,7 @@ void Main::initCooling()
 	    double *dTableData = (double *)malloc(sizeof(double)*nTableRows*nTableColumns);
 	    CkAssert( dTableData != NULL );
 	    nTableRows = ReadASCII(TableFileSuffix, nTableColumns, dTableData);
-      
+
 	    dMProxy.dmCoolTableRead(dTableData,nTableRows*nTableColumns,
 				  CkCallbackResumeThread());
 	    free(dTableData);
@@ -142,7 +142,7 @@ DataManager::initCooling(double dGmPerCcUnit, double dComovingGmPerCcUnit,
 #ifndef COOLING_NONE
     clInitConstants(Cool, dGmPerCcUnit, dComovingGmPerCcUnit, dErgPerGmUnit,
 		    dSecUnit, dKpcUnit, inParam);
-    
+
     CoolInitRatesTable(Cool,inParam);
 #endif
     contribute(cb);
@@ -188,11 +188,11 @@ int Main::ReadASCII(char *extension, int nDataPerLine, double *dDataOut)
 	char achIn[160];
 	double *dData;
 
-	if (dDataOut == NULL) 
+	if (dDataOut == NULL)
 	    dData = (double *)malloc(sizeof(double)*nDataPerLine);
 	else
 	    dData = dDataOut;
-	
+
 	CkAssert(nDataPerLine > 0 && nDataPerLine <= 10);
 	char achFile[MAXPATHLEN];
 	sprintf(achFile, "%s.%s", param.achOutName, extension);
@@ -208,38 +208,38 @@ int Main::ReadASCII(char *extension, int nDataPerLine, double *dDataOut)
 	    if (!fgets(achIn,160,fp)) goto Done;
 	    switch (nDataPerLine) {
 	    case 1:
-		ret = sscanf(achIn,"%lf",dData); 
+		ret = sscanf(achIn,"%lf",dData);
 		break;
 	    case 2:
-		ret = sscanf(achIn,"%lf %lf",dData,dData+1); 
+		ret = sscanf(achIn,"%lf %lf",dData,dData+1);
 		break;
 	    case 3:
-		ret = sscanf(achIn,"%lf %lf %lf",dData,dData+1,dData+2); 
+		ret = sscanf(achIn,"%lf %lf %lf",dData,dData+1,dData+2);
 		break;
 	    case 4:
-		ret = sscanf(achIn,"%lf %lf %lf %lf",dData,dData+1,dData+2,dData+3); 
+		ret = sscanf(achIn,"%lf %lf %lf %lf",dData,dData+1,dData+2,dData+3);
 		break;
 	    case 5:
-		ret = sscanf(achIn,"%lf %lf %lf %lf %lf",dData,dData+1,dData+2,dData+3,dData+4); 
+		ret = sscanf(achIn,"%lf %lf %lf %lf %lf",dData,dData+1,dData+2,dData+3,dData+4);
 		break;
 	    case 6:
-		ret = sscanf(achIn,"%lf %lf %lf %lf %lf %lf",dData,dData+1,dData+2,dData+3,dData+4,dData+5); 
+		ret = sscanf(achIn,"%lf %lf %lf %lf %lf %lf",dData,dData+1,dData+2,dData+3,dData+4,dData+5);
 		break;
 	    case 7:
 		ret = sscanf(achIn,"%lf %lf %lf %lf %lf %lf %lf",
-			     dData,dData+1,dData+2,dData+3,dData+4,dData+5,dData+6); 
+			     dData,dData+1,dData+2,dData+3,dData+4,dData+5,dData+6);
 		break;
 	    case 8:
 		ret = sscanf(achIn,"%lf %lf %lf %lf %lf %lf %lf %lf",
-			     dData,dData+1,dData+2,dData+3,dData+4,dData+5,dData+6,dData+7); 
+			     dData,dData+1,dData+2,dData+3,dData+4,dData+5,dData+6,dData+7);
 		break;
 	    case 9:
 		ret = sscanf(achIn,"%lf %lf %lf %lf %lf %lf %lf %lf %lf",
-			     dData,dData+1,dData+2,dData+3,dData+4,dData+5,dData+6,dData+7,dData+8); 
+			     dData,dData+1,dData+2,dData+3,dData+4,dData+5,dData+6,dData+7,dData+8);
 		break;
 	    case 10:
 		ret = sscanf(achIn,"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
-			     dData,dData+1,dData+2,dData+3,dData+4,dData+5,dData+6,dData+7,dData+8,dData+9); 
+			     dData,dData+1,dData+2,dData+3,dData+4,dData+5,dData+6,dData+7,dData+8,dData+9);
 		break;
 	    default:
 		ret = EOF;
@@ -293,7 +293,7 @@ void DataManager::SetStarCM(double dCenterOfMass[4], const CkCallback& cb) {
  *  @brief utility for checking array files
  */
 bool
-arrayFileExists(const std::string filename, const int64_t count) 
+arrayFileExists(const std::string filename, const int64_t count)
 {
     FILE *fp = CmiFopen(filename.c_str(), "r");
     if(fp != NULL) {
@@ -339,11 +339,11 @@ TreePiece::resetMetals(const CkCallback& cb)
  *  @brief Read in array files for complete gas information.
  */
 void
-Main::restartGas() 
+Main::restartGas()
 {
     if(verbosity)
         CkPrintf("Restarting Gas Simulation with array files.\n");
-    
+
   struct stat s;
   int err = stat(basefilename.c_str(), &s);
   if(err != -1 && S_ISDIR(s.st_mode)) {
@@ -492,7 +492,7 @@ Main::restartGas()
             }
       }
 #endif
-  } else {                      
+  } else {
     // Assume TIPSY arrays
     // read iOrder
     if(arrayFileExists(basefilename + ".iord", nTotalParticles)) {
@@ -558,7 +558,7 @@ Main::restartGas()
             CkError("WARNING: no CoolArray0 file for restart\n");
             }
         if(arrayFileExists(basefilename + "." + COOL_ARRAY1_EXT, nTotalParticles)) {
-                
+
             Cool1OutputParams pCool1Out(basefilename, 0, 0.0);
             treeProxy.readTipsyArray(pCool1Out, CkCallbackResumeThread());
             bFoundCoolArray = true;
@@ -620,7 +620,7 @@ void TreePiece::RestartEnergy(double dTuFac, // T to internal energy
 	    T = p->u() / dTuFac;
             PERBARYON Y;
             CoolPARTICLEtoPERBARYON(cl, &Y, &p->CoolParticle());
-            
+
 	    p->u() = clThermalEnergy(Y.Total,T)*cl->diErgPerGmUnit;
 #endif
 #endif
@@ -638,7 +638,7 @@ void TreePiece::RestartEnergy(double dTuFac, // T to internal energy
  *  Defaults to 1
  */
 void
-Main::doSph(int activeRung, int bNeedDensity) 
+Main::doSph(int activeRung, int bNeedDensity)
 {
   if(bNeedDensity) {
     double dfBall2OverSoft2 = 4.0*param.dhMinOverSoft*param.dhMinOverSoft;
@@ -661,7 +661,7 @@ Main::doSph(int activeRung, int bNeedDensity)
 	treeProxy.startMarkSmooth(&pMark, CkCallbackResumeThread());
 	ckout << " took " << (CkWallTimer() - startTime) << " seconds."
 	      << endl;
-	
+
 	ckout << "Density of Neighbors ...";
 	// This does neighbors (but not actives),  It also does no
 	// additional marking
@@ -716,7 +716,7 @@ Main::doSph(int activeRung, int bNeedDensity)
     treeProxy.startReSmooth(&pPressure, CkCallbackResumeThread());
     ckout << " took " << (CkWallTimer() - startTime) << " seconds."
 	  << endl;
-    
+
     treeProxy.ballMax(activeRung, 1.0+param.ddHonHLimit,
 		      CkCallbackResumeThread());
     }
@@ -774,7 +774,7 @@ void TreePiece::updateuDot(int activeRung,
 {
 #ifndef COOLING_NONE
     double dt; // time in seconds
-    
+
     for(unsigned int i = 1; i <= myNumParticles; ++i) {
 	GravityParticle *p = &myParticles[i];
 	if (TYPETest(p, TYPE_GAS)
@@ -788,7 +788,7 @@ void TreePiece::updateuDot(int activeRung,
 		double r[3];  // For conversion to C
 		p->position.array_form(r);
 		double dtUse = dt;
-		
+
 		if(dStartTime[p->rung] + 0.5*duDelta[p->rung]
 		   < p->fTimeCoolIsOffUntil()) {
 		    /* This flags cooling shutoff (e.g., from SNe) to
@@ -799,14 +799,14 @@ void TreePiece::updateuDot(int activeRung,
 
 		CoolIntegrateEnergyCode(dm->Cool, CoolData, &cp, &E,
 					ExternalHeating, p->fDensity,
-					p->fMetals(), r, dtUse);
+					p->fMetals(), r, dtUse, p->fBall, p->c());
 		CkAssert(E > 0.0);
 		if(dtUse > 0 || ExternalHeating*duDelta[p->rung] + p->u() < 0)
 		    // linear interpolation over interval
 		    p->uDot() = (E - p->u())/duDelta[p->rung];
 		if (bUpdateState) p->CoolParticle() = cp;
 		}
-	    else { 
+	    else {
 		p->uDot() = ExternalHeating;
 		}
 	    }
@@ -827,8 +827,8 @@ void TreePiece::ballMax(int activeRung, double dhFac, const CkCallback& cb)
     // Use shadow array to avoid reduction conflict
     smoothProxy[thisIndex].ckLocal()->contribute(cb);
     }
-    
-int DenDvDxSmoothParams::isSmoothActive(GravityParticle *p) 
+
+int DenDvDxSmoothParams::isSmoothActive(GravityParticle *p)
 {
     if(bActiveOnly && p->rung < activeRung)
 	return 0;		// not active
@@ -837,7 +837,7 @@ int DenDvDxSmoothParams::isSmoothActive(GravityParticle *p)
     }
 
 // Non-active neighbors of Actives
-int DenDvDxNeighborSmParams::isSmoothActive(GravityParticle *p) 
+int DenDvDxNeighborSmParams::isSmoothActive(GravityParticle *p)
 {
     if(p->rung < activeRung && TYPETest(p, iType)
        && TYPETest(p, TYPE_NbrOfACTIVE))
@@ -848,7 +848,7 @@ int DenDvDxNeighborSmParams::isSmoothActive(GravityParticle *p)
 
 // Only do actives
 
-int MarkSmoothParams::isSmoothActive(GravityParticle *p) 
+int MarkSmoothParams::isSmoothActive(GravityParticle *p)
 {
     if(p->rung < activeRung)
 	return 0;		// not active
@@ -911,8 +911,8 @@ void DenDvDxSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
 	int i;
 	unsigned int qiActive;
 
-        ih2 = invH2(p); 
-        ih = sqrt(ih2); 
+        ih2 = invH2(p);
+        ih = sqrt(ih2);
 	vFac = 1./(a*a); /* converts v to xdot */
 	fNorm = M_1_PI*ih2*sqrt(ih2);
 	fDensity = 0.0;
@@ -965,7 +965,7 @@ void DenDvDxSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
                 // calculation.  See discussion after eq. 29 in
                 // Wadsley et al 2017.
                 double R_wt = (1-r2*r2*0.0625)* q->mass;
-                R_CD += q->dvds_old() * R_wt; 
+                R_CD += q->dvds_old() * R_wt;
                 R_CDN += R_wt;
                 // Convention here dvdx = vxq-vxp, dx = xp-xq so
                 // dvdotdr = -dvx*dx ...
@@ -973,7 +973,7 @@ void DenDvDxSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
                     + fDist2*H; // vFac already in there
                 double cavg = (p->c() + q->c())*0.5;
                 double vSig = cavg - (dvdotdr < 0 ? dvdotdr/sqrt(fDist2) : 0);
-                if (vSig > maxVSignal) maxVSignal = vSig; 
+                if (vSig > maxVSignal) maxVSignal = vSig;
 
 #endif
 		}
@@ -984,7 +984,7 @@ void DenDvDxSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
         p->fDensity = fNorm*fDensity;
         trace = dvxdx+dvydy+dvzdz;
         // keep Norm positive consistent w/ std 1/rho norm
-        fNorm1 = (divvnorm != 0 ? 3.0/fabs(divvnorm) : 0.0); 
+        fNorm1 = (divvnorm != 0 ? 3.0/fabs(divvnorm) : 0.0);
 
 #if defined(DIFFUSION) || defined(CULLENALPHA)
       double onethirdtrace = (1./3.)*trace;
@@ -1007,8 +1007,8 @@ void DenDvDxSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
         p->curlv().y = fNorm1*(dvxdz - dvzdx);
         p->curlv().z = fNorm1*(dvydx - dvxdy);
 
-#ifdef CULLENALPHA 
-        double alphaLoc, tau; 
+#ifdef CULLENALPHA
+        double alphaLoc, tau;
         double l = 0.1;
         double Hcorr = (fNorm1 != 0 ? H/fNorm1 : 0);
         double gnorm = (grx*grx+gry*gry+grz*grz);
@@ -1023,10 +1023,10 @@ void DenDvDxSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
         double pdvds_old = p->dvds();
         double dvds = (p->divv() < 0 ? 1.5*(dvdr -(1./3.)*p->divv()) : dvdr );
         double sxxf = dvxdx+Hcorr, syyf = dvydy+Hcorr, szzf = dvzdz+Hcorr;
-        double SFull = sqrt(fNorm1*fNorm1*(sxxf*sxxf+syyf*syyf+szzf*szzf 
+        double SFull = sqrt(fNorm1*fNorm1*(sxxf*sxxf+syyf*syyf+szzf*szzf
                                            + 2*(sxy*sxy + sxz*sxz + syz*syz)));
-       
-        p->dvdsOnSFull() = SFull > 0 ? dvds/SFull : 0; 
+
+        p->dvdsOnSFull() = SFull > 0 ? dvds/SFull : 0;
 #ifdef CD_SFULL
         p->dvds() = p->dvdsOnSFull();
 #else
@@ -1046,7 +1046,7 @@ void DenDvDxSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
             tau = p->fBall / (2.0*l*maxVSignal);
             alphaLoc = -dAlphaMax*p->divv()*tau / (1.0 - p->divv()*tau);
           }
-          else alphaLoc = 0.0; 
+          else alphaLoc = 0.0;
           p->CullenAlpha() = alphaLoc;
         }
         // If the current time step > 0
@@ -1063,9 +1063,9 @@ void DenDvDxSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
 
             // The local alpha value
             alphaLoc = dAlphaMax* Aterm / (maxVSignal*maxVSignal + Aterm);
-            
+
           }
-          else alphaLoc = 0; 
+          else alphaLoc = 0;
           // Decay parameter
           tau = 1. / (l*maxVSignal*ih);
           // If alphaLoc is larger then the current p->CullenAlpha(), we set p->CullenAlhpa() to be equal to alphaLoc.
@@ -1079,7 +1079,7 @@ void DenDvDxSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
         }
 #endif /* CULLENALPHA */
 }
-	
+
 void DenDvDxNeighborSmParams::postTreeParticle(GravityParticle *p)
 {
 #ifdef CULLENALPHA
@@ -1088,26 +1088,26 @@ void DenDvDxNeighborSmParams::postTreeParticle(GravityParticle *p)
 #endif
 }
 
-void 
+void
 TreePiece::sphViscosityLimiter(int bOn, int activeRung, const CkCallback& cb)
 {
     int i;
-    GravityParticle *p;    
+    GravityParticle *p;
 
     // Pressure will be called next, so check this here.
     CkAssert(bBucketsInited);
-    
+
     if (bOn) {
         for(i=1; i<= myNumParticles; ++i) {
 	    p = &myParticles[i];
 	    /* Only set values for particles with fresh curlv, divv
 	       from smooth */
 	    if(TYPETest(p, TYPE_GAS) && p->rung >= activeRung) {
-		if (p->divv() != 0.0) {         	 
+		if (p->divv() != 0.0) {
 		    p->BalsaraSwitch() = fabs(p->divv())/
 			(fabs(p->divv()) + sqrt(p->curlv().lengthSquared()));
 		    }
-		else { 
+		else {
 		    p->BalsaraSwitch() = 0.0;
 		    }
 		}
@@ -1203,7 +1203,7 @@ void TreePiece::getCoolingGasPressure(double gamma, double gammam1,
     smoothProxy[thisIndex].ckLocal()->contribute(cb);
     }
 
-int PressureSmoothParams::isSmoothActive(GravityParticle *p) 
+int PressureSmoothParams::isSmoothActive(GravityParticle *p)
 {
     return (TYPETest(p, TYPE_NbrOfACTIVE));
     }
@@ -1336,8 +1336,8 @@ void PressureSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
         /***********************************
          * SPH Pressure Terms Calculation
          ***********************************/
-        /* Calculate Artificial viscosity term prefactor terms 
-         * 
+        /* Calculate Artificial viscosity term prefactor terms
+         *
          * Updates:
          *  dt
          *  params.visc
@@ -1392,11 +1392,11 @@ void PressureSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
 //                     /((p->fDensity+q->fDensity)*(p->fMass+q->fMass));
 //            #else
                 double diffMetalsBase = 2*dMetalDiffusionCoeff*diffBase \
-                     /(p->fDensity+q->fDensity); 
+                     /(p->fDensity+q->fDensity);
 //            #endif //MASSDIFF
-        
+
             // Thermal diffusion
-            /* 
+            /*
              * Updates:
              *  dt
              *  params.diffu
@@ -1457,7 +1457,7 @@ void PressureSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
 //            /* not implemented */
 //            #ifdef MASSDIFF /* compile-time flag */
 //                params.diffMass = diffMetalsBase*(p->fMass - q->fMass);
-//                // To properly implement this in ChaNGa the correct velocity 
+//                // To properly implement this in ChaNGa the correct velocity
 //                // should be chosen
 //                params.diffVelocity = diffMetalsBase * (p->velocity - q->velocity);
 //            #endif
@@ -1480,9 +1480,9 @@ void PressureSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
 }
 
 /**
- * @brief updateParticle is used to update particle attributes during the 
- * SPH pressure terms calculations.  
- * 
+ * @brief updateParticle is used to update particle attributes during the
+ * SPH pressure terms calculations.
+ *
  * The updating of particle p and the neighbor q during this loop is symmetric
  * (up to a possible sign change).  For example, to update p and its neighbor
  * q is two lines:
@@ -1495,8 +1495,8 @@ void PressureSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
  * @param bParams params specific to b
  * @param sign 1 for a = p (the self particle) and -1 for a = q (the neighbor)
  */
-void updateParticle(GravityParticle *a, GravityParticle *b, 
-                    PressSmoothUpdate *params, PressSmoothParticle *aParams, 
+void updateParticle(GravityParticle *a, GravityParticle *b,
+                    PressSmoothUpdate *params, PressSmoothParticle *aParams,
                     PressSmoothParticle *bParams, int sign) {
     double acc;
     // Update diffusion terms
@@ -1550,12 +1550,12 @@ void updateParticle(GravityParticle *a, GravityParticle *b,
 /*
  * Methods to distribute Deleted gas
  */
-int DistDeletedGasSmoothParams::isSmoothActive(GravityParticle *p) 
+int DistDeletedGasSmoothParams::isSmoothActive(GravityParticle *p)
 {
     return (TYPETest(p, TYPE_DELETED) && TYPETest(p, iType));
     }
 
-void DistDeletedGasSmoothParams::initSmoothCache(GravityParticle *p) 
+void DistDeletedGasSmoothParams::initSmoothCache(GravityParticle *p)
 {
     if(!TYPETest(p, TYPE_DELETED)) {
 	/*
@@ -1580,7 +1580,7 @@ void DistDeletedGasSmoothParams::combSmoothCache(GravityParticle *p1,
 {
     /*
      * Distribute u, v, and fMetals for particles returning from cache
-     * so that everything is conserved nicely.  
+     * so that everything is conserved nicely.
      */
     if(!TYPETest((p1), TYPE_DELETED)) {
 	double delta_m = p2->mass;
@@ -1591,14 +1591,14 @@ void DistDeletedGasSmoothParams::combSmoothCache(GravityParticle *p1,
 	    f1 = p1->mass /m_new;
 	    f2 = delta_m  /m_new;
 	    p1->mass = m_new;
-	    p1->velocity = f1*p1->velocity + f2*p2->velocity;            
+	    p1->velocity = f1*p1->velocity + f2*p2->velocity;
 	    p1->fMetals() = f1*p1->fMetals() + f2*p2->fMetals;
 	    p1->fMFracIron() = f1*p1->fMFracIron() + f2*p2->fMFracIron;
 	    p1->fMFracOxygen() = f1*p1->fMFracOxygen() + f2*p2->fMFracOxygen;
 #ifndef COOLING_NONE
 	    if(p1->uDot() < 0.0) /* margin of 1% to avoid roundoff
 				  * problems */
-		fTCool = 1.01*p1->uPred()/p1->uDot(); 
+		fTCool = 1.01*p1->uPred()/p1->uDot();
 	    p1->u() = f1*p1->u() + f2*p2->u;
 	    p1->uPred() = f1*p1->uPred() + f2*p2->uPred;
 	    if(p1->uDot() < 0.0)
@@ -1610,20 +1610,20 @@ void DistDeletedGasSmoothParams::combSmoothCache(GravityParticle *p1,
 
 void DistDeletedGasSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
 					   pqSmoothNode *nnList)
-{	
+{
     GravityParticle *q;
     double fNorm,ih2,r2,rs,rstot,delta_m,m_new,f1,f2;
     double fTCool; /* time to cool to zero */
     int i;
     CkAssert(TYPETest(p, TYPE_GAS));
     ih2 = invH2(p);
-    rstot = 0;        
+    rstot = 0;
     for (i=0;i<nSmooth;++i) {
 	double fDist2 = nnList[i].fKey;
 	q = nnList[i].p;
 	if(TYPETest(q, TYPE_DELETED)) continue;
 	CkAssert(TYPETest(q, TYPE_GAS));
-	r2 = fDist2*ih2;            
+	r2 = fDist2*ih2;
         rs = KERNEL(r2, nSmooth);
 	rstot += rs;
         }
@@ -1643,7 +1643,7 @@ void DistDeletedGasSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
 	if(TYPETest(q, TYPE_DELETED)) continue;
 
 	double fDist2 = nnList[i].fKey;
-	r2 = fDist2*ih2;            
+	r2 = fDist2*ih2;
 	rs = KERNEL(r2, nSmooth);
 	/*
 	 * All these quantities are per unit mass.
@@ -1657,13 +1657,13 @@ void DistDeletedGasSmoothParams::fcnSmooth(GravityParticle *p, int nSmooth,
 	f1 = q->mass /m_new;
 	f2 = delta_m  /m_new;
 	q->mass = m_new;
-	q->velocity = f1*q->velocity + f2*p->velocity;            
+	q->velocity = f1*q->velocity + f2*p->velocity;
 	q->fMetals() = f1*q->fMetals() + f2*p->fMetals();
 	q->fMFracIron() = f1*q->fMFracIron() + f2*p->fMFracIron();
 	q->fMFracOxygen() = f1*q->fMFracOxygen() + f2*p->fMFracOxygen();
 #ifndef COOLING_NONE
 	if(q->uDot() < 0.0) /* margin of 1% to avoid roundoff error */
-	    fTCool = 1.01*q->uPred()/q->uDot(); 
+	    fTCool = 1.01*q->uPred()/q->uDot();
 	q->u() = f1*q->u()+f2*p->u();
 	q->uPred() = f1*q->uPred()+f2*p->uPred();
 	if(q->uDot() < 0.0) /* make sure we don't shorten cooling time */
