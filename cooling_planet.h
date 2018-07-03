@@ -179,7 +179,7 @@ double CodeDensityToComovingGmPerCc( COOL *Cool, double dCodeDensity );
 
 void CoolIntegrateEnergyCode(COOL *cl, clDerivsData *cData, COOLPARTICLE *cp,
                              double *E, double PdV, double rho, double ZMetal,
-                             double *r, double tStep );
+                             double *r, double tStep, double h, double cs);
 
 void CoolDefaultParticleData( COOLPARTICLE *cp );
 
